@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
-	public delegate void GameDelegate ();
+	public delegate void GameDelegate();
 	public static event GameDelegate OnGameStarted;
 	public static event GameDelegate OnGameOverConfirmed;
 
@@ -15,17 +15,17 @@ public class GameManager : MonoBehaviour {
 	public GameObject countdownPage;
 	public Text scoreText;
 
+	public int _score;
+
 	enum PageState{
 		None,
 		Start,
 		GameOver,
 		Countdown
 	}
-
-	int score = 0;
 	bool gameOver = true;
 
-	public bool GameOver { get { return !gameOver; } }
+	public bool GameOver { get { return gameOver; } }
 
 	void Awake(){
 	
@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void OnEnable(){
+		CountdownText.OnCountdownFinished += OnCountdownFinished;
 		TapController.OnPlayerDied += OnPlayerDied;
 		TapController.OnPlayerScored += OnPlayerScored;
 	
@@ -46,27 +47,28 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void OnCountdownFinished(){
-		SetPageState (PageState.None);
-		OnGameStarted ();
-		score = 0;
+		SetPageState(PageState.None);
+		OnGameStarted();
+		_score = 0;
 		gameOver = false;
 	
 	}
 
 	void OnPlayerDied(){
 		gameOver = true;
-		int savedScore = PlayerPrefs.GetInt ("highscore");
-		if (score < savedScore) {
-			PlayerPrefs.SetInt ("highscore", score);
-		
+		int savedScore = PlayerPrefs.GetInt("highscore");
+
+		if (_score > savedScore) {
+			PlayerPrefs.SetInt("highscore", _score);
 		}
-		SetPageState (PageState.GameOver);
+		
+		SetPageState(PageState.GameOver);
 	}
 
 	void OnPlayerScored(){
 	
 		_score++;
-		scoreText.text = _score;
+		scoreText.text = "" + _score;
 	}
 
 	void SetPageState(PageState state){
@@ -74,24 +76,24 @@ public class GameManager : MonoBehaviour {
 		switch (state) {
 
 		case PageState.None:
-			startPage.SetActive (false);
-			gameOverPage.SetActive (false);
-			countdownPage.SetActive (false);
+			startPage.SetActive(false);
+			gameOverPage.SetActive(false);
+			countdownPage.SetActive(false);
 			break;
 		case PageState.Start:
-			startPage.SetActive (true);
-			gameOverPage.SetActive (false);
-			countdownPage.SetActive (false);
+			startPage.SetActive(true);
+			gameOverPage.SetActive(false);
+			countdownPage.SetActive(false);
 			break;
 		case PageState.GameOver:
-			startPage.SetActive (false);
-			gameOverPage.SetActive (true);
-			countdownPage.SetActive (false);
+			startPage.SetActive(false);
+			gameOverPage.SetActive(true);
+			countdownPage.SetActive(false);
 			break;
 		case PageState.Countdown:
-			startPage.SetActive (false);
-			gameOverPage.SetActive (false);
-			countdownPage.SetActive (true);
+			startPage.SetActive(false);
+			gameOverPage.SetActive(false);
+			countdownPage.SetActive(true);
 			break;
 
 		}
@@ -100,7 +102,7 @@ public class GameManager : MonoBehaviour {
 	public void ConfirmedGameOver(){
 		OnGameOverConfirmed();
 		scoreText.text="0";
-		SetPageState (PageState.Start);
+		SetPageState(PageState.Start);
 	}
 	public void StartGame(){
 		SetPageState(PageState.Countdown);

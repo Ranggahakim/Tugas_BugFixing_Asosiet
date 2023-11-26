@@ -8,7 +8,7 @@ public class Parallaxer : MonoBehaviour {
 
 		public Transform transform;
 		public bool inUse;
-		public PoolObject (Transform t){transform =t;}
+		public PoolObject(Transform t){transform =t;}
 		public void Use(){
 			inUse = true;
 		}
@@ -44,7 +44,7 @@ public class Parallaxer : MonoBehaviour {
 
 	void Awake(){
 	
-		Configure ();
+		Configure();
 	}
 
 	void Start(){
@@ -65,7 +65,7 @@ public class Parallaxer : MonoBehaviour {
 		
 		}		
 		if (spawnImmediate) {
-			SpawnImmediate ();
+			SpawnImmediate();
 
 		}
 	
@@ -93,18 +93,18 @@ public class Parallaxer : MonoBehaviour {
 			Transform t=go.transform;
 			t.SetParent (transform);
 			t.position=Vector3.one*1000;
-			poolObjects [i] = new PoolObject (t);
+			poolObjects [i] = new PoolObject(t);
 		
 		}
 		if (spawnImmediate) {
-			SpawnImmediate ();
+			SpawnImmediate();
 		
 		}
 	}
 
 	void Spawn(){
 
-		Transform t = GetPoolObject ();
+		Transform t = GetPoolObject();
 		if (t == null)
 			return;
 		Vector3 pos = Vector3.zero;
@@ -114,14 +114,14 @@ public class Parallaxer : MonoBehaviour {
 	}
 
 	void SpawnImmediate(){
-		Transform t = GetPoolObject ();
+		Transform t = GetPoolObject();
 		if (t == null)
 			return;
 		Vector3 pos = Vector3.zero;
 		pos.x = (immediateSpawnPos.x*Camera.main.aspect)/targetAspect;
 		pos.y = Random.Range (ySpawnRange.min,ySpawnRange.max);
 		t.position = pos;
-		Spawn ();
+		Spawn();
 	}
 
 	void Shift(){
@@ -135,7 +135,7 @@ public class Parallaxer : MonoBehaviour {
 
 	void CheckDisposeObject(PoolObject poolObject){
 		if(poolObject.transform.position.x<(-defaultSpawnPos.x*Camera.main.aspect)/targetAspect){
-			poolObject.Dispose ();
+			poolObject.Dispose();
 			poolObject.transform.position = Vector3.one * 1000;
 		}
 	
@@ -145,7 +145,7 @@ public class Parallaxer : MonoBehaviour {
 		for(int i=0;i<poolObjects.Length;i++){
 
 			if (!poolObjects [i].inUse) {
-				poolObjects [i].Use ();
+				poolObjects [i].Use();
 				return poolObjects [i].transform;
 			}
 		}

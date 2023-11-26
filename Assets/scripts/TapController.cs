@@ -18,9 +18,7 @@ public class TapController : MonoBehaviour {
 	public AudioSource scoreAudio;
 	public AudioSource dieAudio;
 
-
-
-	Rigidbody2D rigidbody;
+	new Rigidbody2D rigidbody;
 	Quaternion downrotation;
 	Quaternion forwardrotation;
 
@@ -28,9 +26,9 @@ public class TapController : MonoBehaviour {
 
 
 	void Start(){
-		rigidbody = GetComponent<Rigidbody2D> ();
-		downrotation = Quaternion.Euler (0, 0, -90);
-		forwardrotation = Quaternion.Euler (0, 0, 35);
+		rigidbody = GetComponent<Rigidbody2D>();
+		downrotation = Quaternion.Euler(0, 0, -90);
+		forwardrotation = Quaternion.Euler(0, 0, 35);
 		game = GameManager.Instance;
 		rigidbody.simulated = false;
 	}
@@ -47,6 +45,7 @@ public class TapController : MonoBehaviour {
 	}
 
 	void OnGameStarted(){
+		Debug.Log("Game is Started");
 		rigidbody.velocity = Vector3.zero;
 		rigidbody.simulated = true;
 
@@ -63,12 +62,17 @@ public class TapController : MonoBehaviour {
 			
 		if(Input.GetMouseButtonDown(0))
 			{
-			tapAudio.Play ();
+			tapAudio.Play();
 			transform.rotation = forwardrotation;
 			rigidbody.velocity = Vector3.zero;
-			rigidbody.AddForce (Vector2.down * tapForce, ForceMode2D.Force);
+			rigidbody.AddForce(Vector2.up * tapForce, ForceMode2D.Force);
 
 			}
+
+		if(Input.GetKeyDown(KeyCode.P))
+		{
+			Debug.Log("Print");
+		}
 
 		transform.rotation = Quaternion.Lerp (transform.rotation, downrotation, tiltSmooth * Time.deltaTime);
 	
@@ -79,19 +83,16 @@ public class TapController : MonoBehaviour {
 
 		if (col.gameObject.tag == "ScoreZone") {
 		
-			OnPlayerScored ();
+			OnPlayerScored();
 			scoreAudio.Play();
 		}
 
-		if (col.gameObject.tag == "DeadZones") {
+		if (col.gameObject.tag == "DeadZone") {
 		
 			rigidbody.simulated = false;
-			OnPlayerDied ();
+			OnPlayerDied();
 			dieAudio.Play();
-		}
-	
-	
-	
+		}	
 	}
 
 }
